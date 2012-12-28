@@ -32,6 +32,7 @@ namespace factory
     template <class U> void 
     AbstractFactory<T,  Key, Doc, Arg>::register_class (Key Id, Doc doc)
   {
+    U::init();
     Creator<T,Arg>* Fn = (Creator<T,Arg>*)new DerivedCreator<U,Arg>();
     constructor_map_[Id] = Fn;
     constructor_names_.push_back (Id);
@@ -99,6 +100,7 @@ namespace factory
 	delete (*i).second;
 	++i;
       }
+    T::release();
   }
  
 } // end of namespace

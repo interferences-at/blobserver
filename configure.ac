@@ -10,6 +10,7 @@ AC_INIT([BLOBSERVER],
 AC_CONFIG_MACRO_DIR([m4])
 AC_PROG_LIBTOOL
 AM_INIT_AUTOMAKE()
+AC_CONFIG_HEADERS([config.h])
 
 # Check for C and C++ compilers
 AC_PROG_CXX
@@ -28,6 +29,8 @@ AC_COMPILE_IFELSE([AC_LANG_PROGRAM([ ], [ ])], [
 
 
 # Check for header files
+########################
+# Absolutely needed libs
 AC_HEADER_STDC
 
 # GLib
@@ -58,6 +61,20 @@ fi
 PKG_CHECK_MODULES([LIBATOM], atom-0.1)
 if test "x${have_atom}" = "xfalse" ; then
     AC_MSG_ERROR([Missing atom])
+fi
+
+###############
+# Optional libs
+# OpenNI && NITE
+AC_CHECK_LIB([OpenNI],[xnGetVersion],[have_openni=true] [OPENNI_LIBS="-lOpenNI"] [OPENNI_CFLAGS="-I/usr/include/ni"], AC_MSG_WARN([Missing OpenNI]))
+if test "x${have_openni}" = "xtrue" ; then
+    AC_DEFINE([WITH_OPENNI],[1],[Enables linking with OpenNI])
+    AC_MSG_NOTICE([Enabled support for OpenNI])
+    AM_CONDITIONAL(OPENNI, [true])
+    AC_SUBST(OPENNI_LIBS)
+    AC_SUBST(OPENNI_CFLAGS)
+else
+    AM_CONDITIONAL(OPENNI, [false])
 fi
 
 # GNU help2man creates man pages from --help output; in many cases, this

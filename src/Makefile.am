@@ -34,3 +34,17 @@ blobserver_LDADD = \
     $(LIBLO_LIBS) \
     $(LIBATOM_LIBS) \
     $(LCMS_LIBS)
+
+if OPENNI
+blobserver_SOURCES += \
+    source_openni.cpp
+
+noinst_HEADERS += \
+    source_openni.h
+
+blobserver_CXXFLAGS += \
+    $(OPENNI_CFLAGS)
+
+blobserver_LDADD += \
+    $(OPENNI_LIBS)
+endif

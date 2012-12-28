@@ -36,6 +36,9 @@ class Detector
         Detector();
         Detector(int pParam);
 
+        static void init() {}
+        static void release() {}
+
         static std::string getClassName() {return mClassName;}
         static std::string getDocumentation() {return mDocumentation;}
 

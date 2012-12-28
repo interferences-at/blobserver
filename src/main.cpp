@@ -31,15 +31,20 @@
 #include "glib.h"
 #include "opencv2/opencv.hpp"
 #include "lo/lo.h"
-//#include "gst/gst.h"
+
+#include "../config.h"
+#include "atom/osc.h"
+#include "abstract-factory.h"
 
 #include "blob_2D.h"
-#include "source_opencv.h"
 #include "detector_meanOutliers.h"
 #include "detector_lightSpots.h"
 #include "detector_objOnAPlane.h"
-#include "atom/osc.h"
-#include "abstract-factory.h"
+
+#include "source_opencv.h"
+#ifdef WITH_OPENNI
+#include "source_openni.h"
+#endif
 
 static gboolean gVersion = FALSE;
 static gboolean gHide = FALSE;
@@ -352,6 +357,11 @@ void App::registerClasses()
     // Register sources
     mSourceFactory.register_class<Source_OpenCV>(Source_OpenCV::getClassName(),
         Source_OpenCV::getDocumentation());
+#ifdef WITH_OPENNI
+     mSourceFactory.register_class<Source_OpenNI>(Source_OpenNI::getClassName(),
+        Source_OpenNI::getDocumentation());
+   
+#endif
 }
 
 /*****************/
@@ -972,7 +982,6 @@ int App::oscHandlerGetDetectors(const char* path, const char* types, lo_arg** ar
     atom::Message outMessage;
     std::for_each (keys.begin(), keys.end(), [&] (std::string key)
     {
-        std::cout << key << std::endl;
         outMessage.push_back(atom::StringValue::create(key.c_str()));
     } );
 

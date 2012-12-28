@@ -18,22 +18,28 @@
  */
 
 /*
- * @source_opencv.h
- * The Source_OpenCV class.
+ * @source_openni.h
+ * The Source_OpenNI class.
  */
 
-#ifndef SOURCE_OPENCV_H
-#define SOURCE_OPENCV_H
+#ifndef SOURCE_OPENNI_H
+#define SOURCE_OPENNI_H
+
+#include <thread>
+#include <atomic>
 
 #include "source.h"
+#include "XnCppWrapper.h"
 
-class Source_OpenCV : public Source
+class Source_OpenNI : public Source
 {
     public:
-        Source_OpenCV();
-        Source_OpenCV(int pParam);
-        ~Source_OpenCV();
+        Source_OpenNI();
+        Source_OpenNI(int pParam);
+        ~Source_OpenNI();
 
+        static void init();
+        static void release();
 
         static std::string getClassName() {return mClassName;}
         static std::string getDocumentation() {return mDocumentation;}
@@ -52,9 +58,14 @@ class Source_OpenCV : public Source
         static std::string mClassName;
         static std::string mDocumentation;
 
-        cv::VideoCapture mCamera;
+        static xn::Context mNiContext;
+        static bool mContextOk;
+        static xn::NodeInfoList mNodeInfoList;
+
+        static std::thread mNiThread;
 
         void make(int pParam);
+        static void capture();
 };
 
-#endif // SOURCE_OPENCV_H
+#endif // SOURCE_OPENNI_H
